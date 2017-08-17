@@ -1,0 +1,19 @@
+$ ls
+# display ca.pem, client.pem and member2.pem, member2.pem, member3.pem
+$ mkdir -p rs1/db rs2/db rs3/db
+$ mongod --replSet myReplSet --dbpath ./rs1/db --logpath ./rs1/mongod.log --port 27017 --for --sslMode requireSSL --clusterAuthMode x509 --sslPEMKeyFile member1.pem --sslCAFile ca.pem
+$ mongod --replSet myReplSet --dbpath ./rs2/db --logpath ./rs2/mongod.log --port 27018 --for --sslMode requireSSL --clusterAuthMode x509 --sslPEMKeyFile member2.pem --sslCAFile ca.pem
+$ mongod --replSet myReplSet --dbpath ./rs3/db --logpath ./rs3/mongod.log --port 27019 --for --sslMode requireSSL --clusterAuthMode x509 --sslPEMKeyFile member3.pem --sslCAFile ca.pem
+
+
+# using config.yaml files
+security
+  clusterAuthMode x509
+net
+  ssl
+    mode requireSSL
+    CAFile ca.pem
+    cluesterFile member1.pem
+
+
+$ mongod --config config.yaml

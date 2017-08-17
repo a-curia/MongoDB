@@ -1,0 +1,17 @@
+Keyfile base Authentication
+$ openssl rand -base64 755 > my-keyfile
+$ chmod 400 my-keyfile
+$ mkdir -p rs1/db rs2/db rs3/db
+$ mongod --replSet myReplSet --dbpath ./rs1/db --logpath ./rs1/mongod.log --port 27017 --fork --keyFile ./my-keyfile
+$ mongod --replSet myReplSet --dbpath ./rs2/db --logpath ./rs2/mongod.log --port 27018 --fork --keyFile ./my-keyfile
+$ mongod --replSet myReplSet --dbpath ./rs3/db --logpath ./rs3/mongod.log --port 27019 --fork --keyFile ./my-keyfile
+
+$ mongo
+> rs.initiate()
+# create user .. localhost exception
+> use admin
+> db.createUser({user: 'acu', pwd: 'acu', roles:['root']})
+> db.auth('acu', 'acu')
+> rs.add("localhost:27018")
+> rs.add("localhost:27019")
+> rs.status()
